@@ -1,15 +1,19 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { formatPrice } from "../src/price.js";
+import { formatAmount } from "../src/price.js";
 
+// v2 API: `formatPrice` se přejmenovala na `formatAmount` a formát je český:
+// nezlomitelná mezera (U+00A0) jako oddělovač tisíců, desetinná čárka a
+// symbol měny — viz komentář v src/price.js. Oddělovač tisíců je proto
+// v očekávaných řetězcích zapsán explicitně jako "\u00a0".
 test("formátuje cenu v korunách", () => {
-  assert.equal(formatPrice(1234.5), "1234.50 CZK");
+  assert.equal(formatAmount(1234.5), "1\u00a0234,50 Kč");
 });
 
 test("formátuje nulu", () => {
-  assert.equal(formatPrice(0), "0.00 CZK");
+  assert.equal(formatAmount(0), "0,00 Kč");
 });
 
 test("formátuje eura", () => {
-  assert.equal(formatPrice(99.9, "EUR"), "99.90 EUR");
+  assert.equal(formatAmount(99.9, "EUR"), "99,90 €");
 });
